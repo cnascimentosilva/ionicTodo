@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, ToastController, ActionSheetController } from '@ionic/angular';
+import { Task } from '../model/task.model';
+import { homeService } from './home.service';
 
 @Component({
   selector: 'app-home',
@@ -8,18 +10,17 @@ import { AlertController, ToastController, ActionSheetController } from '@ionic/
 })
 export class HomePage {
 
-  tasks: any[] = [];
+  tasks: Task[];
+
   constructor(private alertControl: AlertController,
               private toastControl: ToastController,
               private actionSheetControl: ActionSheetController,
-              ) {
-    let taskJSON = localStorage.getItem('taskDB');
+              private homeService: homeService,
+              ) { }
 
-    if (taskJSON != null) {
-      this.tasks = JSON.parse(taskJSON);
-    }
-  }
-
+      ngOnInit(){
+        this.homeService.getTasks().subscribe(tasks => this.tasks = tasks);
+      }
   async showAdd() {
     const alert = await this.alertControl.create({
       header: 'O que deseja fazer?',
